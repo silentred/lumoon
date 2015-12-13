@@ -29,7 +29,7 @@ function main($argc, $argv)
 {
     if ($argc <= 1) {
         if (posix_isatty(STDIN)) {
-            echo 'Laravoole by Garveen' . PHP_EOL;
+            echo 'Laravoole by Jason' . PHP_EOL;
             echo  PHP_EOL;
             echo 'Usage:' . PHP_EOL;
             echo ' laravoole start | stop | reload | restart | quit' . PHP_EOL;
@@ -50,7 +50,7 @@ function main($argc, $argv)
         $app = require dirname(COMPOSER_INSTALLED) . '/../bootstrap/app.php';
 
         $kernel = $app->make(Illuminate\Contracts\Console\Kernel::class);
-        $kernel->bootstrap();
+        //$kernel->bootstrap();
 
         switch ($argv[1]) {
             case 'start':

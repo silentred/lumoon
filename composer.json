@@ -1,20 +1,17 @@
 {
-    "name": "acabin/laravoole",
-    "description": "Laravel & Swoole",
+    "name": "silentred/lumoon",
+    "description": "Lumen & Swoole",
     "type": "library",
-    "keywords": ["laravel","swoole"],
+    "keywords": ["lumen","swoole"],
     "license": "MIT",
     "authors": [
         {
-            "name": "Gavin",
-            "email": "acabin@live.com"
+            "name": "Jason W.",
+            "email": "silentred3@gmail.com"
         }
     ],
     "require": {
         "php": ">=5.5.9",
-        "laravel/framework": "5.1.*",
-        "ext-swoole": ">=1.7.19",
-        "ext-posix": "*"
     },
     "bin": ["laravoole"]
 }

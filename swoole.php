@@ -12,8 +12,8 @@ use swoole_process;
 class Server
 {
     protected $swoole_http_server;
-    protected $laravel_kernel;
     protected $pid_file;
+    protected $lumen;
     protected $root_dir;
     protected $deal_with_public;
     protected $public_path;
@@ -66,9 +66,10 @@ class Server
     {
         $this->_SERVER = $_SERVER;
         // bootstrap laravel here to enable reload
-        require $this->root_dir . '/bootstrap/autoload.php';
-        $app = require $this->root_dir . '/bootstrap/app.php';
-        $this->laravel_kernel = $app->make(Kernel::class);
+        require $this->root_dir . '/vendor/autoload.php';
+        $this->lumen = require $this->root_dir . '/bootstrap/app.php';
+        //$this->lumen = $app;
+        //$this->laravel_kernel = $app->make(Kernel::class);
 
         $this->public_path = public_path();
 
@@ -83,19 +84,26 @@ class Server
         }
         try {
             $illuminate_request = $this->dealWithRequest($request);
-            $illuminate_response = $this->laravel_kernel->handle($illuminate_request);
+            $illuminate_response = $this->lumen->dispatch($request);
 
             // Is gzip enabled and the client accept it?
             $accept_gzip = $this->gzip && isset($request->header['accept-encoding']) && stripos($request->header['accept-encoding'], 'gzip') !== false;
 
-            $this->dealWithResponse($response, $illuminate_response, $accept_gzip);
+            if ($illuminate_response instanceof SymfonyResponse) {
+                $this->dealWithResponse($response, $illuminate_response, $accept_gzip);
+            } else {
+                //echo (string) $response;
+                $response->end((string)$illuminate_response);
+            }
 
         } catch (ErrorException $e) {
             if (strncmp($e->getMessage(), 'swoole_', 7) === 0) {
                 fwrite(STDOUT, $e->getFile() . '(' . $e->getLine() . '): ' . $e->getMessage() . PHP_EOL);
             }
         } finally {
-            $this->laravel_kernel->terminate($illuminate_request, $illuminate_response);
+            if (count($this->lumen->middleware) > 0) {
+                $this->lumen->callTerminableMiddleware($response);
+            }
         }
 
     }
