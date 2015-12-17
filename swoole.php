@@ -1,5 +1,5 @@
 <?php
-namespace Laravoole;
+namespace Lumoon;
 
 use ErrorException;
 
@@ -65,13 +65,10 @@ class Server
     public function onWorkerStart($serv, $worker_id)
     {
         $this->_SERVER = $_SERVER;
-        // bootstrap laravel here to enable reload
         require $this->root_dir . '/vendor/autoload.php';
         $this->lumen = require $this->root_dir . '/bootstrap/app.php';
-        //$this->lumen = $app;
-        //$this->laravel_kernel = $app->make(Kernel::class);
 
-        $this->public_path = public_path();
+        $this->public_path = base_path('public');
 
     }
 
@@ -84,7 +81,7 @@ class Server
         }
         try {
             $illuminate_request = $this->dealWithRequest($request);
-            $illuminate_response = $this->lumen->dispatch($request);
+            $illuminate_response = $this->lumen->dispatch($illuminate_request);
 
             // Is gzip enabled and the client accept it?
             $accept_gzip = $this->gzip && isset($request->header['accept-encoding']) && stripos($request->header['accept-encoding'], 'gzip') !== false;
@@ -101,8 +98,8 @@ class Server
                 fwrite(STDOUT, $e->getFile() . '(' . $e->getLine() . '): ' . $e->getMessage() . PHP_EOL);
             }
         } finally {
-            if (count($this->lumen->middleware) > 0) {
-                $this->lumen->callTerminableMiddleware($response);
+            if (count($this->lumen->getMiddleware()) > 0) {
+                $this->lumen->callTerminableMiddleware($illuminate_response);
             }
         }
 

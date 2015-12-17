@@ -1,59 +1,60 @@
-#Laravoole
+#Lumoon
 
-Laravel on Swoole
+Lumen on Swoole
 
-##Depends On
+## Depends On
 
-<table>
-	<tr>
-		<td>php</td><td>>=5.5.9</td>
-	</tr>
-	<tr>
-		<td>laravel/framework</td><td>5.1.*</td>
-	</tr>
-	<tr>
-		<td>ext-swoole</td><td>>=1.7.19</td>
-	</tr>
-</table>
+- php >= 5.5.9
+- laravel/lumen > 5.1.*
+- ext-swoole >= 1.7.19
 
 
 ##Install
----------
 
 ```shell
- composer require acabin/laravoole
+ composer require silentred/lumoon
 ```
 
+Because Lumen does not use Http Kernel, you have to create a subclass of `\Laravel\Lumen\Application` under `app` directory.
+In `bootstrap` directory, change Application in app.php to the new one as `App\Application`
+
 ##Usage
--------
 
 ```shell
- vendor/bin/laravoole start | stop | reload | restart | quit
+ vendor/bin/lumoon start | stop | reload | restart | quit
 ```
 
 ##Config
---------
 
-In .env , use LARAVOOLE_* to config Laravoole.
+In .env , use LUMOON_* to config swoole server. For example
+
+```
+LUMOON_REACTOR_NUM=1
+LUMOON_WORKER_NUM=4
+LUMOON_BACKLOG=128
+LUMOON_DISPATCH_MODE=1
+```
+
 
 ###pid_file
 -----------
 
 ```INI
- LARAVOOLE_PID_FILE=/path/to/laravoole.pid
+ LUMOON_PID_FILE=/path/to/lumoon.pid
 ```
+default is at /lumen/storage/logs/swoole.pid
 
 ###gzip
 -------
 
 ```INI
- LARAVOOLE_GZIP=1
+ LUMOON_GZIP=1
 ```
 
 level is in the range from 1 to 9, bigger is compress harder and use more CPU time.
 
 ```INI
- LARAVOOLE_GZIP_MIN_LENGTH=1024
+ LUMOON_GZIP_MIN_LENGTH=1024
 ```
 
 Sets the mINImum length of a response that will be gzipped.
@@ -64,16 +65,16 @@ Sets the mINImum length of a response that will be gzipped.
 Use this ***ONLY*** when developing
 
 ```INI
- LARAVOOLE_DEAL_WITH_PUBLIC=true
+ LUMOON_DEAL_WITH_PUBLIC=true
 ```
 
 ###Swoole
 ---------
 
-Example:
+Eexample:
 
 ```INI
- LARAVOOLE_HOST=0.0.0.0
+ LUMOON_HOST=0.0.0.0
 ```
 
 Default host is 127.0.0.1:9050
@@ -92,7 +93,7 @@ server {
 	listen       80;
 	server_name  localhost;
 
-	root /path/to/laravel/public;
+	root /path/to/lumoon/public;
 
 	location ~ \.(png|jpeg|jpg|gif|css|js)$ {
 		break;

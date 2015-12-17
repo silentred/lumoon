@@ -29,17 +29,17 @@ function main($argc, $argv)
 {
     if ($argc <= 1) {
         if (posix_isatty(STDIN)) {
-            echo 'Laravoole by Jason' . PHP_EOL;
+            echo 'Lumoon by Jason' . PHP_EOL;
             echo  PHP_EOL;
             echo 'Usage:' . PHP_EOL;
-            echo ' laravoole start | stop | reload | restart | quit' . PHP_EOL;
+            echo ' lumoon start | stop | reload | restart | quit' . PHP_EOL;
             echo  PHP_EOL;
         } else {
             $input = file_get_contents('php://stdin');
             require __DIR__ . '/swoole.php';
             $construct_config = unserialize($input);
 
-            $serv = new Laravoole\Server($construct_config['config'], $construct_config['swoole_settings']);
+            $serv = new Lumoon\Server($construct_config['config'], $construct_config['swoole_settings']);
 
             $serv->start();
         }
@@ -119,7 +119,7 @@ function getPidFile()
     if ($pid_file === false) {
 
         $app = app();
-        $pid_file = env('LARAVOOLE_PID_FILE', $app->storagePath() . '/logs/swoole.pid');
+        $pid_file = env('LUMOON_PID_FILE', $app->storagePath() . '/logs/swoole.pid');
     }
     return $pid_file;
 
@@ -172,7 +172,7 @@ function start()
 
     $settings = [];
     foreach ($params as $param) {
-        $key = 'LARAVOOLE_' . strtoupper($param);
+        $key = 'LUMOON_' . strtoupper($param);
         $value = env($key);
         if ($value !== null) {
             $settings[$param] = $value;
@@ -192,13 +192,13 @@ function start()
 
     $construct_config = [
         'config' => [
-            'host' => env('LARAVOOLE_HOST', '127.0.0.1'),
-            'port' => env('LARAVOOLE_PORT', 9050),
+            'host' => env('LUMOON_HOST', '127.0.0.1'),
+            'port' => env('LUMOON_PORT', 9050),
             'pid_file' => getPidFile(),
             'root_dir' => base_path(),
-            'deal_with_public' => env('LARAVOOLE_DEAL_WITH_PUBLIC', false),
-            'gzip' => env('LARAVOOLE_GZIP', 1),
-            'gzip_min_length' => env('LARAVOOLE_GZIP_MIN_LENGTH', 1024),
+            'deal_with_public' => env('LUMOON_DEAL_WITH_PUBLIC', false),
+            'gzip' => env('LUMOON_GZIP', 1),
+            'gzip_min_length' => env('LUMOON_GZIP_MIN_LENGTH', 1024),
         ],
         'swoole_settings' => $settings,
     ];
