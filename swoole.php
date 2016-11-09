@@ -5,7 +5,7 @@ use ErrorException;
 
 use Illuminate\Http\Request as IlluminateRequest;
 use Illuminate\Contracts\Http\Kernel;
-
+use Symfony\Component\HttpFoundation\Response as SymfonyResponse;
 use swoole_http_server;
 use swoole_process;
 
