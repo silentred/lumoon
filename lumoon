@@ -181,7 +181,7 @@ function start()
 
     $defaults = [
         'log_file' => function () {return app()->storagePath() . '/logs/swoole.log';},
-        'daemonize' => 1,
+        'daemonize' => 0,
         'max_request' => 2000,
     ];
     foreach ($defaults as $key => $value) {
